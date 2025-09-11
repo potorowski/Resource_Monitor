@@ -77,6 +77,7 @@ const SWAP_MONITOR = "swapmonitor";
 const SWAP_ALERT = "swapalert";
 const SWAP_ALERT_THRESHOLD = "swapalertthreshold";
 
+const DISK_SHOW_DEVICE_NAME = "diskshowdevicename";
 const DISK_STATS_STATUS = "diskstatsstatus";
 const DISK_STATS_WIDTH = "diskstatswidth";
 const DISK_STATS_COLORS = "diskstatscolors";
@@ -671,6 +672,7 @@ const ResourceMonitor = GObject.registerClass(
       this._swapAlert = this._settings.get_boolean(SWAP_ALERT);
       this._swapAlertThreshold = this._settings.get_int(SWAP_ALERT_THRESHOLD);
 
+      this._diskShowDeviceName = this._settings.get_boolean(DISK_SHOW_DEVICE_NAME);
       this._diskStatsStatus = this._settings.get_boolean(DISK_STATS_STATUS);
       this._diskStatsWidth =
         this._settings.get_int(DISK_STATS_WIDTH) * this._scaleFactor;
@@ -882,6 +884,10 @@ const ResourceMonitor = GObject.registerClass(
         this._swapAlertThresholdChanged.bind(this)
       );
 
+      this._handlerIds[this._handlerIdsCount++] = this._settings.connect(
+        `changed::${DISK_SHOW_DEVICE_NAME}`,
+        this._diskShowDeviceNameChanged.bind(this)
+      );
       this._handlerIds[this._handlerIdsCount++] = this._settings.connect(
         `changed::${DISK_STATS_STATUS}`,
         this._diskStatsStatusChanged.bind(this)
@@ -1106,7 +1112,7 @@ const ResourceMonitor = GObject.registerClass(
 
       this._basicItemStatus(
         (this._netEthStatus && this._nmEthStatus) ||
-          (this._netEthStatus && !this._netAutoHideStatus),
+        (this._netEthStatus && !this._netAutoHideStatus),
         true,
         this._ethIcon,
         this._ethValue,
@@ -1114,7 +1120,7 @@ const ResourceMonitor = GObject.registerClass(
       );
       this._basicItemStatus(
         (this._netWlanStatus && this._nmWlanStatus) ||
-          (this._netWlanStatus && !this._netAutoHideStatus),
+        (this._netWlanStatus && !this._netAutoHideStatus),
         true,
         this._wlanIcon,
         this._wlanValue,
@@ -1147,7 +1153,7 @@ const ResourceMonitor = GObject.registerClass(
 
       this._basicItemStatus(
         (this._netEthStatus && this._nmEthStatus) ||
-          (this._netEthStatus && !this._netAutoHideStatus),
+        (this._netEthStatus && !this._netAutoHideStatus),
         true,
         this._ethIcon,
         this._ethValue,
@@ -1155,7 +1161,7 @@ const ResourceMonitor = GObject.registerClass(
       );
       this._basicItemStatus(
         (this._netWlanStatus && this._nmWlanStatus) ||
-          (this._netWlanStatus && !this._netAutoHideStatus),
+        (this._netWlanStatus && !this._netAutoHideStatus),
         true,
         this._wlanIcon,
         this._wlanValue,
@@ -1265,8 +1271,8 @@ const ResourceMonitor = GObject.registerClass(
       this._basicItemStatus(
         this._cpuStatus,
         !this._thermalCpuTemperatureStatus &&
-          !this._cpuFrequencyStatus &&
-          !this._cpuLoadAverageStatus,
+        !this._cpuFrequencyStatus &&
+        !this._cpuLoadAverageStatus,
         this._cpuIcon,
         this._cpuValue,
         this._cpuUnit
@@ -1294,8 +1300,8 @@ const ResourceMonitor = GObject.registerClass(
       this._basicItemStatus(
         this._cpuFrequencyStatus,
         !this._cpuStatus &&
-          !this._thermalCpuTemperatureStatus &&
-          !this._cpuLoadAverageStatus,
+        !this._thermalCpuTemperatureStatus &&
+        !this._cpuLoadAverageStatus,
         this._cpuIcon,
         this._cpuFrequencyValue,
         this._cpuFrequencyUnit,
@@ -1339,8 +1345,8 @@ const ResourceMonitor = GObject.registerClass(
       this._basicItemStatus(
         this._cpuLoadAverageStatus,
         !this._cpuStatus &&
-          !this._thermalCpuTemperatureStatus &&
-          !this._cpuFrequencyStatus,
+        !this._thermalCpuTemperatureStatus &&
+        !this._cpuFrequencyStatus,
         this._cpuIcon,
         this._cpuLoadAverageValue,
         this._cpuLoadAverageBracketStart,
@@ -1486,6 +1492,17 @@ const ResourceMonitor = GObject.registerClass(
       this._swapAlertThreshold = this._settings.get_int(SWAP_ALERT_THRESHOLD);
     }
 
+    _diskShowDeviceNameChanged() {
+      this._diskShowDeviceName = this._settings.get_boolean(DISK_SHOW_DEVICE_NAME);
+
+      this._diskStatsBox.set_element_name_visibility(
+        this._diskShowDeviceName
+      );
+      this._diskSpaceBox.set_element_name_visibility(
+        this._diskShowDeviceName
+      );
+    }
+
     _diskStatsStatusChanged() {
       this._diskStatsStatus = this._settings.get_boolean(DISK_STATS_STATUS);
 
@@ -1615,6 +1632,13 @@ const ResourceMonitor = GObject.registerClass(
       this._diskSpaceBox.set_element_width(
         this._diskSpaceWidth * this._scaleFactor
       );
+
+      this._diskStatsBox.set_element_name_visibility(
+        this._diskShowDeviceName
+      );
+      this._diskSpaceBox.set_element_name_visibility(
+        this._diskShowDeviceName
+      );
     }
 
     _netAutoHideStatusChanged() {
@@ -1624,7 +1648,7 @@ const ResourceMonitor = GObject.registerClass(
 
       this._basicItemStatus(
         (this._netEthStatus && this._nmEthStatus) ||
-          (this._netEthStatus && !this._netAutoHideStatus),
+        (this._netEthStatus && !this._netAutoHideStatus),
         true,
         this._ethIcon,
         this._ethValue,
@@ -1632,7 +1656,7 @@ const ResourceMonitor = GObject.registerClass(
       );
       this._basicItemStatus(
         (this._netWlanStatus && this._nmWlanStatus) ||
-          (this._netWlanStatus && !this._netAutoHideStatus),
+        (this._netWlanStatus && !this._netAutoHideStatus),
         true,
         this._wlanIcon,
         this._wlanValue,
@@ -1667,7 +1691,7 @@ const ResourceMonitor = GObject.registerClass(
 
       this._basicItemStatus(
         (this._netEthStatus && this._nmEthStatus) ||
-          (this._netEthStatus && !this._netAutoHideStatus),
+        (this._netEthStatus && !this._netAutoHideStatus),
         true,
         this._ethIcon,
         this._ethValue,
@@ -1697,7 +1721,7 @@ const ResourceMonitor = GObject.registerClass(
 
       this._basicItemStatus(
         (this._netWlanStatus && this._nmWlanStatus) ||
-          (this._netWlanStatus && !this._netAutoHideStatus),
+        (this._netWlanStatus && !this._netAutoHideStatus),
         true,
         this._wlanIcon,
         this._wlanValue,
@@ -1730,8 +1754,8 @@ const ResourceMonitor = GObject.registerClass(
       this._basicItemStatus(
         this._thermalCpuTemperatureStatus,
         !this._cpuStatus &&
-          !this._cpuFrequencyStatus &&
-          !this._cpuLoadAverageStatus,
+        !this._cpuFrequencyStatus &&
+        !this._cpuLoadAverageStatus,
         this._cpuIcon,
         this._cpuTemperatureValue,
         this._cpuTemperatureUnit,
@@ -2017,6 +2041,8 @@ const ResourceMonitor = GObject.registerClass(
 
       //this._swapAlertThresholdChanged();
 
+      //this._diskShowDeviceNameChanged();
+
       this._diskStatsStatusChanged();
 
       this._diskStatsWidthChanged();
@@ -2080,132 +2106,99 @@ const ResourceMonitor = GObject.registerClass(
       this._gpuDevicesListChanged();
     }
 
-    // Helper function to determine the color based on usage value(s)
+    // ==================
+    // HELPER FUNCTIONS
+    // ==================
+
+    // Determines the color based on the value and thresholds
     _getUsageColor(value, colors) {
+      if (!colors || colors.length === 0) return "";
+
+      const val = Array.isArray(value) ? Math.max(...value) : value;
+
       for (const colorItem of colors) {
-        const [threshold, red, green, blue] = colorItem
+        const [threshold, rRaw, gRaw, bRaw] = colorItem
           .split(COLOR_LIST_SEPARATOR)
-          .map(parseFloat);
+          .map(Number);
 
-        // Check if value is a single number or an array with two values
-        const meetsThreshold = Array.isArray(value)
-          ? value[0] <= threshold || value[1] <= threshold
-          : value <= threshold;
-
-        if (meetsThreshold) {
-          return `color: rgb(${(red * 255).toFixed(0)}, ${(green * 255).toFixed(
-            0
-          )}, ${(blue * 255).toFixed(0)});`;
+        if (val <= threshold) {
+          const r = Math.round(rRaw > 1 ? rRaw : rRaw * 255);
+          const g = Math.round(gRaw > 1 ? gRaw : gRaw * 255);
+          const b = Math.round(bRaw > 1 ? bRaw : bRaw * 255);
+          return `color: rgb(${r}, ${g}, ${b});`;
         }
       }
       return "";
     }
 
-    // Helper function to set the decimal precision based on _decimalsStatus setting
+    // Decimal precision
     _getValueFixed(value) {
       return this._decimalsStatus ? value.toFixed(1) : value.toFixed(0);
     }
 
-    // Helper function to convert value to desired unit
+    // Conversion for a single value (KB, MB, GB or Hz)
     _convertValueToUnit(value, unitMeasure, isHertz = false) {
       const factor = 1000;
-      let unit = isHertz ? "KHz" : "KB"; // Default to memory or frequency
-
       const unitSuffixes = isHertz
-        ? { k: "KHz", m: "MHz", g: "GHz", t: "THz" }
-        : { k: "KB", m: "MB", g: "GB", t: "TB" };
+        ? ["KHz", "MHz", "GHz", "THz"]
+        : ["KB", "MB", "GB", "TB"];
+
+      let unit = isHertz ? "KHz" : "KB";
+
       switch (unitMeasure) {
-        case "k":
-          unit = unitSuffixes.k;
-          break;
-        case "m":
-          unit = unitSuffixes.m;
-          value /= factor;
-          break;
-        case "g":
-          unit = unitSuffixes.g;
-          value /= factor ** 2;
-          break;
-        case "t":
-          unit = unitSuffixes.t;
-          value /= factor ** 3;
-          break;
+        case "k": break;
+        case "m": value /= factor; unit = unitSuffixes[1]; break;
+        case "g": value /= factor ** 2; unit = unitSuffixes[2]; break;
+        case "t": value /= factor ** 3; unit = unitSuffixes[3]; break;
         case "auto":
         default:
-          if (value > factor) {
-            unit = unitSuffixes.m;
-            value /= factor;
-            if (value > factor) {
-              unit = unitSuffixes.g;
-              value /= factor;
-              if (value > factor) {
-                unit = unitSuffixes.t;
-                value /= factor;
-              }
+          let exp = 0;
+          for (let i = 1; i <= 3; i++) {
+            if (value >= factor ** i) {
+              exp = i;
             }
           }
+          value /= factor ** exp;
+          unit = unitSuffixes[exp];
           break;
       }
       return [value, unit];
     }
 
-    // Helper function to convert values to the desired unit
+    // Conversion of array of values (network/disk)
     _convertValuesToUnit(values, unitMeasure, isBits = false) {
       const factor = 1024;
-      let unit = isBits ? "b" : "B"; // Default to bits or bytes
-
       const unitSuffixes = isBits
-        ? { b: "b", k: "k", m: "m", g: "g", t: "t" }
-        : { b: "B", k: "K", m: "M", g: "G", t: "T" };
+        ? ["b", "k", "m", "g", "t"]
+        : ["B", "K", "M", "G", "T"];
 
-      // Explicit conversions for 'b', 'k', 'm', 'g', 't'
-      switch (unitMeasure) {
-        case "b":
-          unit = unitSuffixes.b;
-          break;
-        case "k":
-          unit = unitSuffixes.k;
-          values = values.map((v) => v / factor);
-          break;
-        case "m":
-          unit = unitSuffixes.m;
-          values = values.map((v) => v / factor ** 2);
-          break;
-        case "g":
-          unit = unitSuffixes.g;
-          values = values.map((v) => v / factor ** 3);
-          break;
-        case "t":
-          unit = unitSuffixes.t;
-          values = values.map((v) => v / factor ** 4);
-          break;
-        case "auto":
-        default:
-          // Automatically determine the appropriate unit based on the values
-          for (const [suffix, exponent] of [
-            [unitSuffixes.k, 1],
-            [unitSuffixes.m, 2],
-            [unitSuffixes.g, 3],
-            [unitSuffixes.t, 4],
-          ]) {
-            if (values.some((v) => v > factor)) {
-              unit = suffix;
-              values = values.map((v) => v / factor ** exponent);
-            } else break;
-          }
-          break;
+      let exponent = 0;
+
+      if (unitMeasure && unitSuffixes.includes(unitMeasure.toUpperCase())) {
+        exponent = unitSuffixes.indexOf(unitMeasure.toUpperCase());
+      } else {
+        while (values.some(v => v >= factor ** (exponent + 1)) && exponent < 4) {
+          exponent++;
+        }
       }
 
-      return { values, unit };
+      const unit = unitSuffixes[exponent];
+      return {
+        values: values.map(v => v / factor ** exponent),
+        unit
+      };
     }
 
-    // Helper function to convert temperature based on the unit setting
-    _convertTemperature(temperature) {
-      if (this._thermalTemperatureUnit === "f") {
-        return [temperature * 1.8 + 32, "°F"];
-      }
-      return [temperature, "°C"];
+    // Temperature conversion
+    _convertTemperature(tempC) {
+      return this._thermalTemperatureUnit === "f"
+        ? [tempC * 1.8 + 32, "°F"]
+        : [tempC, "°C"];
     }
+
+    // ==================
+    // REFRESH FUNCTIONS
+    // ==================
 
     _refreshCpuValue() {
       this._loadFile("/proc/stat")
@@ -2291,7 +2284,7 @@ const ResourceMonitor = GObject.registerClass(
           // Apply unit conversions or percentage formatting
           if (this._ramUnitType === "perc") {
             const percentValue = (100 * value) / total;
-            this._ramValue.style = this._getUsageColor(value, this._ramColors);
+            this._ramValue.style = this._getUsageColor(percentValue, this._ramColors);
             this._ramValue.text = `${this._getValueFixed(percentValue)}`;
             this._ramUnit.text = "%";
           } else {
@@ -2359,7 +2352,7 @@ const ResourceMonitor = GObject.registerClass(
           if (this._swapUnitType === "perc") {
             const percentValue = (100 * value) / total;
             this._swapValue.style = this._getUsageColor(
-              value,
+              percentValue,
               this._swapColors
             );
             this._swapValue.text = `${this._getValueFixed(percentValue)}`;
@@ -2681,7 +2674,7 @@ const ResourceMonitor = GObject.registerClass(
           this._cpuFrequencyUnit.text = unit;
         })
         .catch((error) =>
-          console.error("[Resource_Monitor] Error reading cpu frequncy:", error)
+          console.error("[Resource_Monitor] Error reading cpu frequency:", error)
         );
     }
 
@@ -2968,7 +2961,6 @@ const DiskContainer = GObject.registerClass(
 
       this._elementsPath = [];
       this._elementsName = [];
-      this._elementsLabel = [];
       this._elementsValue = [];
       this._elementsUnit = [];
     }
@@ -2988,10 +2980,21 @@ const DiskContainer = GObject.registerClass(
       }
     }
 
+    set_element_name_visibility(status) {
+      this._elementsPath.forEach((element) => {
+        if (typeof this._elementsName[element] !== "undefined") {
+          if (status) {
+            this._elementsName[element].show();
+          } else {
+            this._elementsName[element].hide();
+          }
+        }
+      });
+    }
+
     cleanup_elements() {
       this._elementsPath = [];
       this._elementsName = [];
-      this._elementsLabel = [];
       this._elementsValue = [];
       this._elementsUnit = [];
 
