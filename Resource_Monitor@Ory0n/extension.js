@@ -412,7 +412,7 @@ const ResourceMonitor = GObject.registerClass(
 
       this._cpuTemperatureBracketStart = new St.Label({
         y_align: Clutter.ActorAlign.CENTER,
-        text: "[",
+        text: "",
       });
       this._cpuTemperatureValue = new St.Label({
         y_align: Clutter.ActorAlign.CENTER,
@@ -423,7 +423,7 @@ const ResourceMonitor = GObject.registerClass(
       });
       this._cpuTemperatureBracketEnd = new St.Label({
         y_align: Clutter.ActorAlign.CENTER,
-        text: "]",
+        text: "",
       });
 
       this._cpuFrequencyBracketStart = new St.Label({
